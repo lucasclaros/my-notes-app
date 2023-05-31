@@ -16,7 +16,7 @@ import java.util.*
 class MyNotesController (private val myNotesService: MyNotesService) {
     @PostMapping
     fun saveNote(@RequestBody @Valid myNotesDto: MyNotesDto) : ResponseEntity<Any> {
-        var myNotesModel = NoteModel(null, myNotesDto.name, myNotesDto.description)
+        val myNotesModel = NoteModel(null, myNotesDto.name, myNotesDto.description)
         return ResponseEntity.status(HttpStatus.CREATED).body(myNotesService.save(myNotesModel))
     }
     
@@ -26,33 +26,33 @@ class MyNotesController (private val myNotesService: MyNotesService) {
     }
     @GetMapping("/{id}")
     fun getNoteByID(@PathVariable(value = "id") id: UUID): ResponseEntity<Any> {
-        var note: Optional<NoteModel> = myNotesService.findByID(id)
+        val note: Optional<NoteModel> = myNotesService.findByID(id)
 
-        if (!note.isPresent()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Num achei o caba não")
+        if (!note.isPresent) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nota não encontrada")
         }
         return ResponseEntity.status(HttpStatus.OK).body(note.get())
     }
 
     @DeleteMapping("/{id}")
     fun deleteNoteByID(@PathVariable(value = "id") id: UUID): ResponseEntity<Any> {
-        var note: Optional<NoteModel> = myNotesService.findByID(id)
+        val note: Optional<NoteModel> = myNotesService.findByID(id)
 
         if (!note.isPresent) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Num achei o caba não")
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nota não encontrada")
         }
         myNotesService.delete(note.get())
-        return ResponseEntity.status(HttpStatus.OK).body("Executei o caba chefia")
+        return ResponseEntity.status(HttpStatus.OK).body("Nota deletada")
     }
 
     @PutMapping("/{id}")
     fun updateNoteByID(@PathVariable(value = "id") id: UUID, @RequestBody @Valid myNotesDto: MyNotesDto): ResponseEntity<Any> {
-        var note: Optional<NoteModel> = myNotesService.findByID(id)
+        val note: Optional<NoteModel> = myNotesService.findByID(id)
 
         if (!note.isPresent) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Num achei o caba não")
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nota não encontrada")
         }
-        var newNote = note.get()
+        val newNote = note.get()
         newNote.name = myNotesDto.name
         newNote.description = myNotesDto.description
         return ResponseEntity.status(HttpStatus.OK).body(myNotesService.save(newNote))
